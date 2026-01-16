@@ -4,17 +4,17 @@ const db = require('../config/db');
 
 // 1. LOGIN (Verificar credenciales y devolver ROL)
 router.post('/login', (req, res) => {
-    const { correo, password } = req.body;
+    const { username, password } = req.body;
 
     // Hacemos JOIN para obtener el nombre del rol directamente
     const sql = `
-        SELECT u.id_usuario, u.nombre, u.correo, r.nombre_rol 
+        SELECT u.id_usuario, u.nombre, u.username, r.nombre_rol
         FROM usuarios u 
         JOIN roles r ON u.id_rol = r.id_rol 
-        WHERE u.correo = ? AND u.password = ?
+        WHERE u.username = ? AND u.password = ?
     `;
 
-    db.query(sql, [correo, password], (err, result) => {
+    db.query(sql, [username, password], (err, result) => {
         if (err) return res.status(500).send(err);
         
         if (result.length > 0) {
@@ -27,15 +27,15 @@ router.post('/login', (req, res) => {
 
 // 2. OBTENER TODOS LOS USUARIOS (Solo para Admin)
 router.get('/get', (req, res) => {
-    const sql = "SELECT u.id_usuario, u.nombre, u.correo, r.nombre_rol FROM usuarios u JOIN roles r ON u.id_rol = r.id_rol";
+    const sql = "SELECT u.id_usuario, u.nombre, u.username, u.correo, r.nombre_rol FROM usuarios u JOIN roles r ON u.id_rol = r.id_rol";
     db.query(sql, (err, result) => res.send(result));
 });
 
 // 3. CREAR USUARIO (Solo Admin)
 router.post('/create', (req, res) => {
-    const { nombre, correo, password, id_rol } = req.body;
-    const sql = "INSERT INTO usuarios (nombre, correo, password, id_rol) VALUES (?,?,?,?)";
-    db.query(sql, [nombre, correo, password, id_rol], (err, result) => {
+    const { nombre, username, correo, password, id_rol } = req.body;
+    const sql = "INSERT INTO usuarios (nombre, username, correo, password, id_rol) VALUES (?,?,?,?,?)";
+    db.query(sql, [nombre, username, correo, password, id_rol], (err, result) => {
         if(err) return res.status(500).send(err);
         res.send(result);
     });

@@ -7,6 +7,7 @@ function GestionUsuarios() {
     
     // Estados para el formulario de nuevo usuario
     const [nombre, setNombre] = useState("");
+    const [username, setUsername] = useState("");
     const [correo, setCorreo] = useState("");
     const [password, setPassword] = useState("");
     const [rol, setRol] = useState("2"); // Por defecto seleccionamos 'Bodeguero' (ID 2)
@@ -30,13 +31,14 @@ function GestionUsuarios() {
     const crearUsuario = (e) => {
         e.preventDefault();
         
-        if(!nombre || !correo || !password) {
+        if(!nombre || !username || !password) {
             setStatus({ type: 'error', mensaje: 'Todos los campos son obligatorios' });
             return;
         }
 
         Axios.post('http://localhost:3001/api/usuarios/create', {
             nombre: nombre,
+            username: username,
             correo: correo,
             password: password,
             id_rol: rol
@@ -45,6 +47,7 @@ function GestionUsuarios() {
             cargarUsuarios(); // Recargar la tabla
             // Limpiar formulario
             setNombre("");
+            setUsername("");
             setCorreo("");
             setPassword("");
             setTimeout(() => setStatus({ type: '', mensaje: '' }), 3000);
@@ -80,6 +83,14 @@ function GestionUsuarios() {
                                 type="text" className="form-control" 
                                 value={nombre} onChange={(e) => setNombre(e.target.value)}
                                 placeholder="Ej: Juan Pérez"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Username:</label>
+                            <input 
+                                type="text" className="form-control" 
+                                value={username} onChange={(e) => setUsername(e.target.value)}
+                                placeholder="Ej: Juanito123"
                             />
                         </div>
                         <div className="form-group">
@@ -124,6 +135,7 @@ function GestionUsuarios() {
                         <thead>
                             <tr>
                                 <th>Nombre</th>
+                                <th>Username</th>
                                 <th>Correo</th>
                                 <th>Rol</th>
                                 <th>Acción</th>
@@ -133,6 +145,7 @@ function GestionUsuarios() {
                             {usuarios.map((u) => (
                                 <tr key={u.id_usuario}>
                                     <td style={{fontWeight: 'bold'}}>{u.nombre}</td>
+                                    <td>{u.username}</td>
                                     <td>{u.correo}</td>
                                     <td>
                                         {/* Badge de color según el rol */}
