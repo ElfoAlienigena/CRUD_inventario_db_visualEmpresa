@@ -18,6 +18,14 @@ const categoriasRoutes = require('./routes/categorias');
 // ... después de app.use(express.json())
 app.use('/api/categorias', categoriasRoutes);
 
+// ... otros imports
+const dashboardRoutes = require('./routes/dashboard'); // <--- 1. Importar
+
+app.use('/api/dashboard', dashboardRoutes); // <--- 2. Usar
+
+const usuariosRoutes = require('./routes/usuarios');
+app.use('/api/usuarios', usuariosRoutes);
+
 app.listen(3001, () => {
     console.log("Servidor Intranet corriendo en puerto 3001");
 });

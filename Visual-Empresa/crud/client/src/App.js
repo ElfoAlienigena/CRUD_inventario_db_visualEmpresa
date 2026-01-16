@@ -1,45 +1,48 @@
-import React, { useState } from 'react'; // Importamos useState para manejar recargas
+import React, { useState } from 'react';
 import './App.css';
-import CrearCategoria from './components/crearCategoria';
-import CrearProducto from './components/crearProducto';
-import ListaProductos from './components/listaProductos';
+import Login from './components/Login';
+import Sidebar from './components/sidebar';
+import ModuloProductos from './components/moduloProductos';
+import DashboardResumen from './components/dashboardResumen';
+import GestionUsuarios from './components/GestionUsuarios'; // (Lo crearemos en paso 5)
 
 function App() {
-  // Truco Pro: Usamos una variable de estado para forzar la recarga de la lista
-  // cuando creamos un producto nuevo.
-  const [recargar, setRecargar] = useState(false);
+  // Estado Global del Usuario (null = no logueado)
+  const [usuario, setUsuario] = useState(null);
+  const [vista, setVista] = useState('resumen');
 
-  const refrescarLista = () => {
-    setRecargar(!recargar); // Cambia el valor (true/false) para disparar el useEffect
-  };
+  // Si no hay usuario, retornamos SOLO la pantalla de Login
+  if (!usuario) {
+      return <Login setUsuarioGlobal={setUsuario} />;
+  }
 
+  // Si hay usuario, retornamos el Dashboard completo
   return (
-    <div className="App" style={{ backgroundColor: '#f4f6f9', minHeight: '100vh', padding: '20px' }}>
+    <div className="dashboard-container">
       
-      <h1 style={{ color: '#2c3e50', textAlign: 'center', marginBottom: '30px' }}>
-        🏢 Intranet de Gestión
-      </h1>
+      {/* Pasamos el rol al Sidebar para ocultar botones */}
+      <Sidebar 
+          vistaActual={vista} 
+          cambiarVista={setVista} 
+          rol={usuario.nombre_rol} 
+          cerrarSesion={() => setUsuario(null)}
+      />
 
-      {/* SECCIÓN DE CREACIÓN */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px', marginBottom: '40px' }}>
+      <div className="content-area">
+        {/* Header con nombre del usuario */}
+        <div style={{display: 'flex', justifyContent: 'flex-end', marginBottom: '20px'}}>
+             <span>Hola, <b>{usuario.nombre}</b> ({usuario.nombre_rol})</span>
+        </div>
+
+        {vista === 'resumen' && <DashboardResumen />}
         
-        <div style={{ flex: '1', minWidth: '300px', maxWidth: '400px' }}>
-            <CrearCategoria />
-        </div>
-
-        <div style={{ flex: '1', minWidth: '300px', maxWidth: '400px' }}>
-            {/* Pasamos la función refrescarLista para que cuando guarde, avise a la tabla */}
-            <CrearProducto alGuardar={refrescarLista} />
-        </div>
+        {/* Pasamos el ROL al módulo de productos para filtrar botones */}
+        {vista === 'productos' && <ModuloProductos rol={usuario.nombre_rol} />}
+        
+        {/* Solo el Admin puede entrar aquí */}
+        {vista === 'usuarios' && usuario.nombre_rol === 'Administrador' && <GestionUsuarios />}
 
       </div>
-
-      {/* SECCIÓN DE VISUALIZACIÓN */}
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-          {/* La 'key' obliga a React a repintar el componente si cambia el valor de 'recargar' */}
-          <ListaProductos key={recargar} />
-      </div>
-
     </div>
   );
 }

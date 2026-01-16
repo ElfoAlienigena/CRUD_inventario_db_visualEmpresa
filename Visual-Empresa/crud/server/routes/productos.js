@@ -109,4 +109,37 @@ router.post('/movimiento', (req, res) => {
     });
 });
 
+// 3. ACTUALIZAR PRODUCTO (EDITAR)
+router.put('/update', (req, res) => {
+    const { id_producto, nombre, precio_unitario, stock_minimo } = req.body;
+    
+    const sqlUpdate = `
+        UPDATE productos 
+        SET nombre = ?, precio_unitario = ?, stock_minimo = ? 
+        WHERE id_producto = ?
+    `;
+
+    db.query(sqlUpdate, [nombre, precio_unitario, stock_minimo, id_producto], (err, result) => {
+        if (err) return res.status(500).send(err);
+        res.send(result);
+    });
+});
+
+// 4. ELIMINAR PRODUCTO
+router.delete('/delete/:id', (req, res) => {
+    const id = req.params.id;
+
+    // Nota: Si el producto tiene historial, MySQL podría bloquear el borrado por seguridad (Foreign Key).
+    // Para este ejemplo simple, intentaremos borrarlo.
+    const sqlDelete = "DELETE FROM productos WHERE id_producto = ?";
+    
+    db.query(sqlDelete, [id], (err, result) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).send("No se puede eliminar: El producto tiene movimientos asociados.");
+        }
+        res.send(result);
+    });
+});
+
 module.exports = router;
