@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
-import './IntranetStyles.css'; // Reusamos los mismos estilos elegantes
+import './intranetStyles.css'; // Reusamos los mismos estilos elegantes
 
 function CrearProducto({ alGuardar }) {
     // 1. Estados para los datos del formulario
