@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import './IntranetStyles.css'; // Reusamos los mismos estilos elegantes
 
-function CrearProducto() {
+function CrearProducto({ alGuardar }) {
     // 1. Estados para los datos del formulario
     const [sku, setSku] = useState("");
     const [nombre, setNombre] = useState("");
@@ -45,6 +45,7 @@ function CrearProducto() {
             id_usuario: 1 // IMPORTANTE: Por ahora hardcodeamos "1" (Admin). Luego vendrá del Login.
         }).then(() => {
             setStatus({ type: 'success', mensaje: 'Producto registrado e inventariado correctamente' });
+            if(alGuardar) alGuardar();
             // Limpiar formulario
             setSku("");
             setNombre("");
