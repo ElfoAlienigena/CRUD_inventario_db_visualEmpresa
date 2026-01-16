@@ -3,7 +3,7 @@ const mysql = require('mysql');
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'starmaN1', // Recuerda poner tu contraseña real
+    password: '', // Recuerda poner tu contraseña real
     database: 'intranet_inventario' 
 });
 
