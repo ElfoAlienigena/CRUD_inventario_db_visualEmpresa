@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Axios from 'axios';
-import './intranetStyles.css'; // Crearemos este archivo de estilos abajo
+import './intranetStyles.css';
+import Swal from 'sweetalert2/dist/sweetalert2.js'
+import 'sweetalert2/src/sweetalert2.scss'
 
 function CrearCategoria({ actualizarLista }) {
     // Estados para los campos

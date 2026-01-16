@@ -117,7 +117,7 @@ function ListaProductos({ usuario }) {
     };
 
     return (
-        <div className="card-intranet" style={{ maxWidth: '95%', marginTop: '30px' }}>
+        <div className="card-intranet" style={{ width: '100%' }}>
             <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <h3>📋 Inventario Interactivo</h3>
                 <div>
@@ -135,11 +135,15 @@ function ListaProductos({ usuario }) {
                             paging: true,
                             searching: true,
                             ordering: true,
+                            responsive: true,
+                            pageLength: 5,
+                            lengthMenu: [5, 10, 20],
+                            autoWidth: false,
                             language: {
                                 search: "Buscar producto:",
                                 lengthMenu: "Mostrar _MENU_ registros",
-                                info: "Mostrando _START_ a _END_ de _TOTAL_ productos",
-                                infoEmpty: "No hay datos disponibles",
+                                info: "_START_ - _END_ de _TOTAL_",
+                                infoEmpty: "0 registros",
                                 paginate: {
                                     first: "Primero",
                                     last: "Último",
