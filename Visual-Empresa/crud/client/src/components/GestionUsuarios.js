@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import './intranetStyles.css';
+import DataTable from 'datatables.net-react';
+import DT from 'datatables.net-dt';
+import 'datatables.net-dt/css/dataTables.dataTables.min.css';
+
+DataTable.use(DT);
 
 function GestionUsuarios() {
     const [usuarios, setUsuarios] = useState([]);
@@ -68,10 +73,10 @@ function GestionUsuarios() {
     };
 
     return (
-        <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', width: '100%' }}>
             
             {/* --- TARJETA 1: FORMULARIO DE CREACIÓN --- */}
-            <div className="card-intranet" style={{ flex: 1, minWidth: '300px' }}>
+            <div className="card-intranet" style={{ flex: '0 0 350px' }}>
                 <div className="card-header">
                     <h3>👤 Registrar Nuevo Empleado</h3>
                 </div>
@@ -126,48 +131,62 @@ function GestionUsuarios() {
             </div>
 
             {/* --- TARJETA 2: LISTA DE USUARIOS --- */}
-            <div className="card-intranet" style={{ flex: 2, minWidth: '400px' }}>
+            <div className="card-intranet" style={{ flex: 1, minWidth: '500px', maxWidth: '100%' }}>
                 <div className="card-header">
                     <h3>👥 Personal Activo</h3>
                 </div>
-                <div className="card-body" style={{ padding: 0 }}>
-                    <table className="table-intranet">
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Username</th>
-                                <th>Correo</th>
-                                <th>Rol</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {usuarios.map((u) => (
-                                <tr key={u.id_usuario}>
-                                    <td style={{fontWeight: 'bold'}}>{u.nombre}</td>
-                                    <td>{u.username}</td>
-                                    <td>{u.correo}</td>
-                                    <td>
-                                        {/* Badge de color según el rol */}
-                                        <span className={`badge-rol ${u.nombre_rol.toLowerCase()}`}>
-                                            {u.nombre_rol}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        {/* Evitar que el admin se borre a sí mismo (opcional visualmente) */}
-                                        <button 
-                                            className="btn-action" 
-                                            style={{color: '#e74c3c'}}
-                                            onClick={() => eliminarUsuario(u.id_usuario, u.nombre)}
-                                            title="Revocar acceso"
-                                        >
-                                            🗑️
-                                        </button>
-                                    </td>
+
+                <div className="card-body">
+                    {usuarios.length > 0 ? (
+                        <DataTable 
+                            className="display table-intranet"
+                            options={{
+                                paging: true,
+                                searching: true,
+                                responsive: true,
+                                language: {
+                                    search: "🔍 Buscar empleado:",
+                                    lengthMenu: "Ver _MENU_ por pág.",
+                                    info: "Mostrando _START_ a _END_ de _TOTAL_",
+                                    paginate: { first: "Primero", last: "Último", next: "Sig.", previous: "Ant." }
+                                }
+                            }}
+                        >
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Correo</th>
+                                    <th>Rol</th>
+                                    <th>Acción</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {usuarios.map((u) => (
+                                    <tr key={u.id_usuario}>
+                                        <td style={{fontWeight: 'bold'}}>{u.nombre}</td>
+                                        <td>{u.correo}</td>
+                                        <td>
+                                            <span className={`badge-rol ${u.nombre_rol.toLowerCase()}`}>
+                                                {u.nombre_rol}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <button 
+                                                className="btn-action" 
+                                                style={{color: '#e74c3c'}}
+                                                onClick={() => eliminarUsuario(u.id_usuario, u.nombre)}
+                                                title="Revocar acceso"
+                                            >
+                                                🗑️
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </DataTable>
+                    ) : (
+                        <p style={{textAlign: 'center', padding: '20px'}}>Cargando usuarios...</p>
+                    )}
                 </div>
             </div>
         </div>

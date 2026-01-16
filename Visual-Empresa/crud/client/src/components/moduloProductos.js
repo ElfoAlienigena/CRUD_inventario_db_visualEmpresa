@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import CrearProducto from './crearProducto';
 import ListaProductos from './listaProductos';
 
-function ModuloProductos({ rol }) {
+function ModuloProductos({ usuario }) {
+    const rol = usuario.nombre_rol;
     const [recargar, setRecargar] = useState(false);
 
     const refrescarLista = () => {
@@ -10,17 +11,16 @@ function ModuloProductos({ rol }) {
     };
 
     return (
-        <div>
+        <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', width: '100%' }}>
             {/* SOLO Admin y Bodeguero pueden ver el formulario de CREAR */}
             {(rol === 'Administrador' || rol === 'Bodeguero') && (
                 <div style={{ flex: 1 }}>
-                     <CrearProducto alGuardar={refrescarLista} />
+                    <CrearProducto alGuardar={refrescarLista} usuario={usuario} />
                 </div>
             )}
             
             <div style={{ flex: 2 }}>
-                {/* Pasamos el rol a la tabla para filtrar botones internos */}
-                <ListaProductos key={recargar} rolUsuario={rol} />
+                <ListaProductos key={recargar} usuario={usuario} />
             </div>
         </div>
     );

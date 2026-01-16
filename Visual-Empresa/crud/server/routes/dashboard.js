@@ -9,10 +9,16 @@ router.get('/resumen', (req, res) => {
     // 3. Cuenta cuántos tienen menos de 5 unidades (Alertas)
     const sql = `
         SELECT 
-            COUNT(*) as total_productos,
-            SUM(stock_actual * precio_unitario) as valor_inventario,
-            SUM(CASE WHEN stock_actual < 5 THEN 1 ELSE 0 END) as productos_bajo_stock
-        FROM productos
+            (SELECT COUNT(*) FROM productos) as total_productos,
+            
+            (SELECT SUM(stock_actual * precio_unitario) FROM productos) as valor_inventario,
+            
+            (SELECT COUNT(*) FROM productos WHERE stock_actual < 5) as productos_bajo_stock,
+            
+            (SELECT COALESCE(SUM(h.cantidad * p.precio_unitario), 0) 
+             FROM historial_movimientos h 
+             JOIN productos p ON h.id_producto = p.id_producto 
+             WHERE h.tipo_movimiento = 'SALIDA') as total_ventas
     `;
 
     db.query(sql, (err, result) => {

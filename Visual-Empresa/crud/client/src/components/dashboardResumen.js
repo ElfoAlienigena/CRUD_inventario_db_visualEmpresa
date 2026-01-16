@@ -6,7 +6,8 @@ function DashboardResumen() {
     const [kpi, setKpi] = useState({
         total_productos: 0,
         valor_inventario: 0,
-        productos_bajo_stock: 0
+        productos_bajo_stock: 0,
+        total_ventas: 0
     });
 
     useEffect(() => {
@@ -53,6 +54,15 @@ function DashboardResumen() {
                     <div className="info">
                         <h3>Valor Inventario</h3>
                         <p>{formatoMoneda(kpi.valor_inventario)}</p>
+                    </div>
+                </div>
+
+                {/* --- NUEVA TARJETA: VENTAS TOTALES (Púrpura) --- */}
+                <div className="kpi-card purple">
+                    <div className="icon">📈</div>
+                    <div className="info">
+                        <h3>Ventas Totales</h3>
+                        <p>{formatoMoneda(kpi.total_ventas)}</p>
                     </div>
                 </div>
 

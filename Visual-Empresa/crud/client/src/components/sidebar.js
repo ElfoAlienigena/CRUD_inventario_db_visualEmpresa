@@ -4,7 +4,7 @@ import './intranetStyles.css';
 function Sidebar({ vistaActual, cambiarVista, rol, cerrarSesion }) {
     return (
         <div className="sidebar">
-            <h2>🏢 EMPRESA APP</h2>
+            <h2>INVENTARIO</h2>
             
             <button className={`menu-btn ${vistaActual === 'resumen' ? 'active' : ''}`} onClick={() => cambiarVista('resumen')}>
                 📊 Resumen

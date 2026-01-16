@@ -4,7 +4,8 @@ import Login from './components/Login';
 import Sidebar from './components/sidebar';
 import ModuloProductos from './components/moduloProductos';
 import DashboardResumen from './components/dashboardResumen';
-import GestionUsuarios from './components/GestionUsuarios'; // (Lo crearemos en paso 5)
+import GestionUsuarios from './components/GestionUsuarios';
+
 
 function App() {
   // Estado Global del Usuario (null = no logueado)
@@ -37,7 +38,7 @@ function App() {
         {vista === 'resumen' && <DashboardResumen />}
         
         {/* Pasamos el ROL al módulo de productos para filtrar botones */}
-        {vista === 'productos' && <ModuloProductos rol={usuario.nombre_rol} />}
+        {vista === 'productos' && <ModuloProductos usuario={usuario} />}
         
         {/* Solo el Admin puede entrar aquí */}
         {vista === 'usuarios' && usuario.nombre_rol === 'Administrador' && <GestionUsuarios />}
